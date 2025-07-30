@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 
 const DashboardItem = [
   { id: 0, name: "Dashboard", icon: HomeIcon, href: "/dashboard" },
-  { id: 1, name: "Invoice", icon: User2, href: "/invoice" },
+  { id: 1, name: "Invoice", icon: User2, href: "/dashboard/invoices" },
 ];
 export default function DashboardLinks() {
   const pathname = usePathname();

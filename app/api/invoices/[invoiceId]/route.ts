@@ -1,5 +1,5 @@
 import { prisma } from "@/app/utils/db";
-import { formatedCurrency, formatedDate } from "@/app/utils/internationalAPI";
+import { formatedDate } from "@/app/utils/internationalAPI";
 import { jsPDF } from "jspdf";
 import { NextRequest, NextResponse } from "next/server";
 
