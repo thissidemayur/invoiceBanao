@@ -1,5 +1,11 @@
 # 📄 InvoiceBanao
 
+<p align="center">
+  <img src="./public/banner/invoicebanao-banner.png" alt="InvoiceBanao Banner" width="800" />
+</p>
+
+[![Next.js](https://img.shields.io/badge/Next.js-15-black?logo=nextdotjs)](https://nextjs.org/) [![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=white)](https://react.dev/) [![Prisma](https://img.shields.io/badge/Prisma-6-2D3748?logo=prisma)](https://www.prisma.io/) [![NextAuth.js](https://img.shields.io/badge/NextAuth.js-v5--beta-000?logo=auth0)](https://authjs.dev/) [![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-4-38B2AC?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/) [![Mailtrap](https://img.shields.io/badge/Mailtrap-Email_Testing-28C8A7?logo=mailtrap)](https://mailtrap.io/) [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](#-license) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](#-contributing) [![Deploy](https://img.shields.io/badge/Deploy-Vercel-000?logo=vercel)](https://vercel.com/)
+
 A full-stack **Next.js** application that allows users to **create, manage, and send invoices** directly to their clients' emails, along with transaction reports and dashboards.
 
 Live Demo: **[invoiceBanao.vercel.app](https://invoiceBanao.vercel.app)**
@@ -40,14 +46,16 @@ Live Demo: **[invoiceBanao.vercel.app](https://invoiceBanao.vercel.app)**
 - Mailtrap SMTP & SDK
 - PDFKit, jsPDF, jsPDF-Autotable (for generating PDFs)
 
-**Other Tools:**
+**Email & PDF**
 
-- Zod (validation)
-- Nodemailer
-- Date-fns
-- Class Variance Authority, CLSX
+- Mailtrap SMTP + SDK, Nodemailer
+- PDFKit, jsPDF, jsPDF-Autotable
 
----
+**Validation & Utils**
+
+- Zod, date-fns, clsx, class-variance-authority
+
+## Full `package.json` highlights are in the repo.
 
 ## 🚀 Getting Started
 
@@ -93,17 +101,36 @@ NEXT_SERVER=http://localhost:3000
 npm run dev
 ```
 
-## 📦 API Endpoints
+---
 
-- All API routes are inside /app/api:
+## 📦 API Endpoints (`/app/api/*`)
+
+- `POST /api/auth/*` – Authentication (Google OAuth & Magic Link)
+- `POST /api/invoices` – Create invoice, generate PDF, CRUD operations
+- `POST /api/email` – Reminder emails & transactional messages
+
+> Your structure mentions `auth`, `email`, and `invoices`. Ensure proper HTTP verbs for CRUD: `GET/POST/PATCH/DELETE` as required.
+
+---
+
+## 🧭 Folder Structure (simplified)
 
 ```bash
-api/auth – Handles authentication (Google OAuth & Magic Link)
-
-api/invoices – Generates PDFs & manages invoice CRUD
-
-api/email – Sends reminder emails
+app/
+  api/
+    auth/
+    email/
+    invoices/
+  (routes...)  # app router pages, onboarding, dashboard, etc.
+components/
+lib/
+prisma/
+public/
+  banner/
+  screenshots/
 ```
+
+---
 
 ## 🖼️ Screenshots
 
@@ -116,20 +143,26 @@ api/email – Sends reminder emails
 👉 invoiceBanao.vercel.app
 ```
 
+---
+
 ## 🙋 Author
 
-👤 Mayur (thissidemayur)
+**Mayur (thissidemayur)**
+
+- GitHub: [@thissidemayur](https://github.com/thissidemayur)
+
+---
 
 ## 🛠️ Contributing
 
-Contributions, issues, and feature requests are welcome!
+Contributions are welcome!
 
-- Fork the project
+1. Fork the repo
+2. Create a feature branch: `git checkout -b feat/your-feature`
+3. Commit: `git commit -m "feat: add your feature"`
+4. Push: `git push origin feat/your-feature`
+5. Open a Pull Request
 
-- Create a feature branch: git checkout -b feature/YourFeature
+Please follow conventional commits and add tests where possible.
 
-- Commit your changes: git commit -m 'Add some feature'
-
-- Push to the branch: git push origin feature/YourFeature
-
-- Open a pull request
+---
