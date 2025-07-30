@@ -1,7 +1,7 @@
 # 📄 InvoiceBanao
 
 <p align="center">
-  <img src="./public/banner/invoicebanao-banner.png" alt="InvoiceBanao Banner" width="800" />
+  <img src="./public/banner/invoicebanao-banner.svg" alt="InvoiceBanao Banner" width="800" />
 </p>
 
 [![Next.js](https://img.shields.io/badge/Next.js-15-black?logo=nextdotjs)](https://nextjs.org/) [![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=white)](https://react.dev/) [![Prisma](https://img.shields.io/badge/Prisma-6-2D3748?logo=prisma)](https://www.prisma.io/) [![NextAuth.js](https://img.shields.io/badge/NextAuth.js-v5--beta-000?logo=auth0)](https://authjs.dev/) [![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-4-38B2AC?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/) [![Mailtrap](https://img.shields.io/badge/Mailtrap-Email_Testing-28C8A7?logo=mailtrap)](https://mailtrap.io/) [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](#-license) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](#-contributing) [![Deploy](https://img.shields.io/badge/Deploy-Vercel-000?logo=vercel)](https://vercel.com/)
