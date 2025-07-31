@@ -14,7 +14,7 @@ import { redirect } from "next/navigation";
 import React, { use, useTransition } from "react";
 import { toast } from "sonner";
 
-export default function page({
+export default function PaidPage({
   params,
 }: {
   params: Promise<{ invoiceId: string }>;

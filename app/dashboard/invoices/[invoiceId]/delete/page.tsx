@@ -14,7 +14,7 @@ import { useRouter } from "next/navigation";
 import React, { use, useTransition } from "react";
 import { toast } from "sonner";
 
-export default function page({
+export default function DeleteInvoicePage({
   params,
 }: {
   params: Promise<{ invoiceId: string }>;
@@ -32,6 +32,7 @@ export default function page({
         router.push("/dashboard/invoices");
       });
     } catch (error) {
+      console.error("error: ", error);
       toast.error("Failed to error invoice");
     }
   };
