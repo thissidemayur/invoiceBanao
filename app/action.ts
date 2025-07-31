@@ -107,7 +107,6 @@ export async function createInvoice(prevState: any, formData: FormData) {
 
     }
 
-    redirect("/dashboard/invoices")
 }
 
 export async function editInvoice(prevValue: any, formdata: FormData) {
@@ -171,8 +170,6 @@ export async function editInvoice(prevValue: any, formdata: FormData) {
     }
     return { status: "success", message: "Invoice Updated and email sent." };
 
-
-    redirect("/dashboard/invoices")
 }
 
 export async function deleteInvoice(invoiceId: string) {
