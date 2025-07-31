@@ -15,7 +15,7 @@ Live Demo: **[invoiceBanao.vercel.app](https://invoiceBanao.vercel.app)**
 ## ✨ Features
 
 - 🔐 **Cookie-based authentication** with NextAuth
-- 🌐 **Google OAuth** and **Magic Link Login**
+- 🌐 **Magic Link Login**
 - 📩 Send invoices and reminders via **Mailtrap SMTP & SDK**
 - 🖨 Generate & send **PDF invoices from scratch (editable & copyable)**
 - 📝 Create, edit, delete invoices
@@ -77,21 +77,20 @@ npm install
 
 ```bash
 AUTH_SECRET=
-
 NEXTAUTH_URL=http://localhost:3000
 
-# SMTP server (Mailtrap)
-EMAIL_SERVER_USER=
-EMAIL_SERVER_PASSWORD=
-EMAIL_SERVER_HOST=sandbox.smtp.mailtrap.io
-EMAIL_SERVER_PORT=2525
-EMAIL_FROM=Mailtrap ma@example.com
+FROM_EMAIL=
+FROM_NAME=InvoiceBanao
+APP_URL=
 
-MAILTRAP_TOKEN=
 
+# This was inserted by `prisma init`:
 DATABASE_URL=
+#
+NEXT_SERVER === NEXTAUTH_URL
 
-NEXT_SERVER=http://localhost:3000
+
+RESEND_API_KEY=re_hGTbsQQv_BXjvnYdiRvpBHXqeDHDU1FTz
 
 ```
 
@@ -105,9 +104,10 @@ npm run dev
 
 ## 📦 API Endpoints (`/app/api/*`)
 
-- `POST /api/auth/*` – Authentication (Google OAuth & Magic Link)
+- `POST /api/auth/*` – Authentication ( Magic Link)
 - `POST /api/invoices` – Create invoice, generate PDF, CRUD operations
 - `POST /api/email` – Reminder emails & transactional messages
+  `POST /api/signout` – logout account
 
 > Your structure mentions `auth`, `email`, and `invoices`. Ensure proper HTTP verbs for CRUD: `GET/POST/PATCH/DELETE` as required.
 
@@ -121,6 +121,7 @@ app/
     auth/
     email/
     invoices/
+    signOut/
   (routes...)  # app router pages, onboarding, dashboard, etc.
 components/
 lib/
