@@ -1,17 +1,21 @@
-import { signOut } from "../utils/auth";
+"use client";
+import { Button } from "@react-email/components";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export default function SignOutPage() {
-  return (
-    <div>
-      <h5>Are you sure you want to sign out?</h5>
-      <form
-        action={async () => {
-          "use server";
-          await signOut();
-        }}
-      >
-        <button type="submit">Sign out</button>
-      </form>
-    </div>
-  );
+  const router = useRouter();
+  const handleLogout = async () => {
+    const res = await fetch("/api/signout", {
+      method: "POST",
+    });
+    console.log("Res: ", res);
+    if (res.ok) {
+      toast.success("successfull logout");
+      router.replace("/");
+    } else {
+      toast.error("logout failed");
+    }
+  };
+  return <Button onClick={handleLogout}>Sign Out </Button>;
 }
