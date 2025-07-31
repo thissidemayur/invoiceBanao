@@ -22,13 +22,15 @@ import { useForm } from "@conform-to/react";
 import { parseWithZod } from "@conform-to/zod";
 import { Label } from "@/components/ui/label";
 import { ChevronDownIcon } from "lucide-react";
-import React, { Suspense, useActionState, useState } from "react";
+import React, { Suspense, useActionState, useEffect, useState } from "react";
 import SubmitButton from "./SubmitButton";
 import { Prisma } from "@prisma/client";
 import { Badge } from "@/components/ui/badge";
 import { invoiceSchema } from "../utils/zodSchema";
 import { editInvoice } from "../action";
 import { SkeletonCard } from "./Skelton";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 //
 
@@ -36,6 +38,7 @@ interface iEditInvoiceProp {
   data: Prisma.InvoiceGetPayload<{}>;
 }
 export default function EditInvoice({ data }: iEditInvoiceProp) {
+  const router = useRouter();
   const [date, setDate] = useState<Date | undefined>(new Date());
   console.log("edit data: ", data);
 
@@ -57,6 +60,21 @@ export default function EditInvoice({ data }: iEditInvoiceProp) {
   const [currency, setCurrency] = useState(data.currency as any);
 
   const calculateTotal = (Number(rate) || 0) * (Number(quantity) || 0);
+
+  useEffect(() => {
+    if (!lastResult?.status) return;
+
+    if ("message" in lastResult) {
+      if (lastResult.status === "success") {
+        toast.success(lastResult.message);
+        router.push("/dashboard");
+      } else if (lastResult.status === "email_failed") {
+        toast.warning(lastResult.message);
+      } else {
+        toast.error(lastResult.message || "Something went wrong.");
+      }
+    }
+  }, [lastResult]);
   return (
     <Suspense fallback={<SkeletonCard />}>
       <Card>

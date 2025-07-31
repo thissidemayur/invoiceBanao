@@ -16,7 +16,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import React, { Suspense, useActionState, useState } from "react";
+import React, { Suspense, useActionState, useEffect, useState } from "react";
 import { Calendar } from "@/components/ui/calendar";
 import { ChevronDownIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -28,8 +28,12 @@ import { parseWithZod } from "@conform-to/zod";
 import { invoiceSchema } from "../utils/zodSchema";
 import { formatedDate, formatedCurrency } from "../utils/internationalAPI";
 import { SkeletonCard } from "./Skelton";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export default function CreateInvoice() {
+  const router = useRouter();
+
   const [date, setDate] = useState<Date | undefined>(new Date());
 
   const [lastResult, action] = useActionState(createInvoice, undefined);
@@ -50,6 +54,21 @@ export default function CreateInvoice() {
   const [currency, setCurrency] = useState("INR");
 
   const calculateTotal = (Number(rate) || 0) * (Number(quantity) || 0);
+
+  useEffect(() => {
+    if (!lastResult?.status) return;
+
+    if ("message" in lastResult) {
+      if (lastResult.status === "success") {
+        toast.success(lastResult.message);
+        router.push("/dashboard");
+      } else if (lastResult.status === "email_failed") {
+        toast.warning(lastResult.message);
+      } else {
+        toast.error(lastResult.message || "Something went wrong.");
+      }
+    }
+  }, [lastResult]);
 
   return (
     <Suspense fallback={<SkeletonCard />}>
