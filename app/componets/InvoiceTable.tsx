@@ -49,6 +49,9 @@ export default async function InvoiceTable() {
         href="/dashboard/invoices/create"
       />
     );
+
+  let totalAmountRuppee = 0;
+  let totalAmountDollar = 0;
   return (
     <Suspense fallback={<SkeletonCard />}>
       <Table>
@@ -64,36 +67,55 @@ export default async function InvoiceTable() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {invoiceList?.map((invoiceItem) => (
-            <TableRow key={invoiceItem.id}>
-              <TableCell className="font-semibold">
-                {invoiceItem.invoiceNumber}
-              </TableCell>
-              <TableCell>{invoiceItem.clientName}</TableCell>
-              <TableCell>
-                {formatedCurrency({
-                  currency: invoiceItem.currency as any,
-                  amount: invoiceItem.total,
-                })}
-              </TableCell>
-              <TableCell>
-                <Badge>{invoiceItem.status}</Badge>
-              </TableCell>
-              <TableCell>{formatedDate(invoiceItem.date)}</TableCell>
-              <TableCell className="text-right">
-                {/* invoice action */}
-                <InvoiceAction
-                  invoiceId={invoiceItem.id}
-                  invoiceStatus={invoiceItem.status}
-                />
-              </TableCell>
-            </TableRow>
-          ))}
+          {invoiceList?.map((invoiceItem) => {
+            if (invoiceItem.currency === "INR") {
+              totalAmountRuppee += invoiceItem.total;
+            } else {
+              totalAmountDollar += invoiceItem.total;
+            }
+            return (
+              <TableRow key={invoiceItem.id}>
+                <TableCell className="font-semibold">
+                  {invoiceItem.invoiceNumber}
+                </TableCell>
+                <TableCell>{invoiceItem.clientName}</TableCell>
+                <TableCell>
+                  {formatedCurrency({
+                    currency: invoiceItem.currency as any,
+                    amount: invoiceItem.total,
+                  })}
+                </TableCell>
+                <TableCell>
+                  <Badge>{invoiceItem.status}</Badge>
+                </TableCell>
+                <TableCell>{formatedDate(invoiceItem.date)}</TableCell>
+                <TableCell className="text-right">
+                  {/* invoice action */}
+                  <InvoiceAction
+                    invoiceId={invoiceItem.id}
+                    invoiceStatus={invoiceItem.status}
+                  />
+                </TableCell>
+              </TableRow>
+            );
+          })}
         </TableBody>
         <TableFooter>
           <TableRow>
             <TableCell colSpan={5}>Amount </TableCell>
-            <TableCell className="text-right">50000000</TableCell>
+            <TableCell className="text-right">
+              {totalAmountRuppee
+                ? formatedCurrency({
+                    currency: "INR",
+                    amount: totalAmountRuppee,
+                  })
+                : totalAmountDollar
+                ? `+ ${formatedCurrency({
+                    currency: "INR",
+                    amount: totalAmountRuppee,
+                  })}`
+                : ""}
+            </TableCell>
           </TableRow>
         </TableFooter>
       </Table>
