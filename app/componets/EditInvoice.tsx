@@ -74,7 +74,7 @@ export default function EditInvoice({ data }: iEditInvoiceProp) {
         toast.error(lastResult.message || "Something went wrong.");
       }
     }
-  }, [lastResult]);
+  }, [lastResult, router]);
   return (
     <Suspense fallback={<SkeletonCard />}>
       <Card>

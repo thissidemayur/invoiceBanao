@@ -68,7 +68,7 @@ export default function CreateInvoice() {
         toast.error(lastResult.message || "Something went wrong.");
       }
     }
-  }, [lastResult]);
+  }, [lastResult, router]);
 
   return (
     <Suspense fallback={<SkeletonCard />}>
