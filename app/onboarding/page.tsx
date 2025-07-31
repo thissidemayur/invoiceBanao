@@ -6,7 +6,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Label } from "@radix-ui/react-dropdown-menu";
+import { Label } from "@/components/ui/label";
 import React, { useActionState } from "react";
 import SubmitButton from "../componets/SubmitButton";
 import { onBoardUser } from "../action";
@@ -14,7 +14,7 @@ import { useForm } from "@conform-to/react";
 import { parseWithZod } from "@conform-to/zod";
 import { onboardingSchema } from "../utils/zodSchema";
 
-export default function page() {
+export default function OnboardingPage() {
   // run server action from client side  track and update state on the basic of the lastresult(success or failure)
   const [lastResult, action] = useActionState(onBoardUser, undefined);
   const [form, fields] = useForm({
