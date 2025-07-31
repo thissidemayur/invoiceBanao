@@ -35,7 +35,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ inv
                     "fromName": `${data?.fromName}`,
                     "fromEmail": `${data?.fromEmail}`,
                     "fromAddress": ` ${data?.fromAddress}`,
-                    "currentYear": `${new Date().getFullYear}`,
+                    "currentYear": `${new Date().getFullYear()}`,
                 }),
             });
         } catch (error) {
