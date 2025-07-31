@@ -5,7 +5,10 @@ import { parseWithZod } from '@conform-to/zod';
 import { invoiceSchema, onboardingSchema } from "./utils/zodSchema";
 import { prisma } from "./utils/db";
 import { redirect } from "next/navigation";
-import { emailClient } from "./utils/mailtrap";
+import { resend } from "./utils/resend";
+import InvoiceEmail from "./template/InvoiceSent";
+import UpdatedInvoiceEmail from "./template/InvoiceUpdated";
+// import { sendWithTemplate } from "./utils/resend";
 // function for server action
 
 export async function onBoardUser(prevState: any, formData: FormData) {
@@ -49,7 +52,7 @@ export async function createInvoice(prevState: any, formData: FormData) {
 
 
     // create invoice db
-    const data = await prisma.invoice.create({
+    const invoiceData = await prisma.invoice.create({
         data: {
             clientAddress: submission.value.clientAddress as string,
             clientEmail: submission.value.clientEmail,
@@ -72,23 +75,37 @@ export async function createInvoice(prevState: any, formData: FormData) {
         }
     })
 
-    emailClient.send({
-        from: {
-            email: "hello@demomailtrap.co",
-            name: "Mailtrap Test",
-        },
-        to: [{
-            email: "thissidemayur@gmail.com"
-        }],
-        template_uuid: "3fff8def-87ce-4971-8ee8-a6b33a63ec23",
-        template_variables: {
-            "invoiceNumber": submission.value.invoiceNumber,
-            "invoiceName": submission.value.invoiceName,
-            "dueDate": submission.value.dueDate,
-            "total": submission.value.total,
-            "downloadButton": `${process.env.NEXTAUTH_URL}/api/invoices/${data.id}`
-        }
-    }).then(console.log, console.error)
+    if (!invoiceData) return {
+        status: "error", message: "Invoice creation failed. Try again.",
+    }
+
+    // send via sendgrid
+    try {
+        await resend.emails.send({
+            from: process.env.FROM_EMAIL!,
+            to: submission.value.clientEmail,
+            subject: `🧾 Invoice #${submission.value.invoiceNumber} Sent to ${submission.value.clientName}`,
+            react: InvoiceEmail({
+                invoiceNumber: submission.value.invoiceNumber.toString(),
+                invoiceName: submission.value.invoiceName,
+                dueDate: submission.value.dueDate.toString(),
+                total: submission.value.total.toString(),
+                downloadButton: `${process.env.NEXTAUTH_URL}/api/invoices/${invoiceData.id}`,
+            }),
+        });
+
+        return {
+            status: "success",
+            message: "Invoice created and email sent."
+        };
+
+
+    } catch (err) {
+        console.error('Resend  invoice error:', err);
+
+        return { status: "email_failed", message: "Invoice created, but email sending failed." };
+
+    }
 
     redirect("/dashboard/invoices")
 }
@@ -101,7 +118,7 @@ export async function editInvoice(prevValue: any, formdata: FormData) {
 
     if (submission.status !== "success") return submission.reply()
 
-    const data = await prisma.invoice.update(({
+    const invoiceData = await prisma.invoice.update(({
         where: {
             id: formdata.get("id") as string,
             userId: session.user?.id
@@ -128,25 +145,32 @@ export async function editInvoice(prevValue: any, formdata: FormData) {
 
     }))
 
-    if (!data) return { status: "error" }
+    if (!invoiceData) return {
+        status: "error", message: "Invoice creation failed. Try again.",
+    }
+    try {
+        await resend.emails.send({
+            from: process.env.FROM_EMAIL!,
+            to: submission.value.clientEmail,
+            subject: `🔄 Invoice #${submission.value.invoiceNumber} Updated`,
+            react: UpdatedInvoiceEmail({
+                invoiceNumber: submission.value.invoiceNumber.toString(),
+                invoiceName: submission.value.invoiceName,
+                dueDate: submission.value.dueDate.toString(),
+                total: submission.value.total.toString(),
+                downloadButton: `${process.env.NEXTAUTH_URL}/api/invoices/${invoiceData.id}`,
+            }),
+        });
 
-    emailClient.send({
-        from: {
-            email: "hello@demomailtrap.co",
-            name: "Mailtrap Test",
-        },
-        to: [{
-            email: "thissidemayur@gmail.com"
-        }],
-        template_uuid: "7ec0275d-acd2-4aab-8606-8dc73fd35094",
-        template_variables: {
-            "invoiceNumber": submission.value.invoiceNumber,
-            "invoiceName": submission.value.invoiceName,
-            "dueDate": submission.value.dueDate,
-            "total": submission.value.total,
-            "downloadButton": `${process.env.NEXTAUTH_URL}/api/invoices/${formdata.get("id")}`
-        }
-    })
+
+
+    } catch (err) {
+        console.error('Resend update invoice error:', err);
+        return { status: "email_failed", message: "Invoice updated, but email sending failed." };
+
+    }
+    return { status: "success", message: "Invoice Updated and email sent." };
+
 
     redirect("/dashboard/invoices")
 }

@@ -1,6 +1,7 @@
+import InvoiceReminderEmail from "@/app/template/InvoiceReminder";
 import { prisma } from "@/app/utils/db";
 import { requiredUser } from "@/app/utils/hooks";
-import { emailClient } from "@/app/utils/mailtrap";
+import { resend } from "@/app/utils/resend";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest, { params }: { params: Promise<{ invoiceId: string }> }) {
@@ -16,33 +17,39 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ inv
             }
         })
 
-        if (!data) return NextResponse.json({ error: "User not found" }, { status: 404 })
-        emailClient.send({
-            from: {
-                email: "hello@demomailtrap.co",
-                name: "Mailtrap Test",
-            },
-            to: [
-                {
-                    email: "thissidemayur@gmail.com",
-                }
-            ],
-            template_uuid: "d3f7bdf3-769b-4cde-924b-55cb0752681b",
-            template_variables: {
-                "invoiceNumber": `${data?.invoiceNumber}`,
-                "clientName": `${data?.clientName}`,
-                "dueDate": `${data?.dueDate}`,
-                "invoiceName": `${data?.invoiceName}`,
-                "invoiceDate": `${data?.date}`,
-                "totalAmount": `${data?.total}`,
-                "fromName": `${data?.fromName}`,
-                "fromEmail": `${data?.fromEmail}`,
-                "fromAddress": ` ${data?.fromAddress}`,
-                "currentYear": `${new Date().getFullYear}`,
-            }
-        })
-        return NextResponse.json({ message: "Email Sent successfull" }, { status: 200 })
+        if (!data) return NextResponse.json(
+            { error: "Invoice not found or unauthorized access." },
+            { status: 404 })
+        try {
+            await resend.emails.send({
+                from: process.env.FROM_EMAIL!,
+                to: `${data.clientEmail}`,
+                subject: `Payment Reminder: Invoice #${data.invoiceNumber}`,
+                react: InvoiceReminderEmail({
+                    "invoiceNumber": `${data?.invoiceNumber}`,
+                    "clientName": `${data?.clientName}`,
+                    "dueDate": `${data?.dueDate}`,
+                    "invoiceName": `${data?.invoiceName}`,
+                    "invoiceDate": `${data?.date}`,
+                    "totalAmount": `${data?.total}`,
+                    "fromName": `${data?.fromName}`,
+                    "fromEmail": `${data?.fromEmail}`,
+                    "fromAddress": ` ${data?.fromAddress}`,
+                    "currentYear": `${new Date().getFullYear}`,
+                }),
+            });
+        } catch (error) {
+            console.error("error while sending reminder email: ", error)
+            return NextResponse.json({ error: "failed to send reminder email" }, { status: 500 })
+        }
+
+
+        return NextResponse.json({ message: "Reminder Email Sent successfull" }, { status: 200 })
     } catch (error) {
-        return NextResponse.json({ error: "failed to send email reminder" }, { status: 500 })
+        console.error("Server error while processing reminder request:", error);
+        return NextResponse.json(
+            { error: "Internal server error. Unable to send reminder." },
+            { status: 500 }
+        );
     }
 }
