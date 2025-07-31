@@ -14,6 +14,8 @@ interface IformatedCurrency {
 export function formatedCurrency({ amount, currency }: IformatedCurrency) {
     return new Intl.NumberFormat("en-US", {
         style: "currency",
-        currency: currency
+        currency: currency,
+        minimumFractionDigits: 2,
+        maximumSignificantDigits: 2,
     }).format(amount)
 }
