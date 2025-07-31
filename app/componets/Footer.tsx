@@ -33,7 +33,7 @@ export default function Footer() {
           {/* About Section */}
           <div className="text-center md:text-left space-y-3">
             <h2 className="text-2xl font-extrabold text-gray-800 tracking-tight">
-              Hey, I'm Mayur 👋
+              Hey, I&apos;m Mayur 👋
             </h2>
             <p className="text-gray-600 text-sm max-w-sm leading-relaxed">
               CS undergrad passionate about backend, DevOps, cloud, and building

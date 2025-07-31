@@ -53,8 +53,8 @@ export const InvoiceReminderEmail = ({
           <Text style={text}>
             This is a friendly reminder that invoice{" "}
             <strong>#{invoiceNumber}</strong> is still pending. The due date is{" "}
-            <strong>{dueDate}</strong>, and we'd really appreciate your timely
-            payment.
+            <strong>{dueDate}</strong>, and we&apos;d really appreciate your
+            timely
           </Text>
 
           <Section style={invoiceBox}>
@@ -90,8 +90,8 @@ export const InvoiceReminderEmail = ({
           </Section>
 
           <Text style={{ ...text, marginTop: "25px" }}>
-            If you've already paid, please disregard this message. Thank you for
-            your business! 🙏
+            If you&apos;ve already paid, please disregard this message. Thank
+            you for your business! 🙏
           </Text>
 
           <Text style={footer}>
@@ -109,6 +109,7 @@ export const InvoiceReminderEmail = ({
 
 export default InvoiceReminderEmail;
 
+// 🔧 Styles
 const main = {
   backgroundColor: "#f3f4f6",
   padding: "20px",

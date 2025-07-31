@@ -32,8 +32,8 @@ export const UpdatedInvoiceEmail = ({
         <Container style={container}>
           <Heading style={heading}>📝 Your Invoice Has Been Updated</Heading>
           <Text style={subText}>
-            We've updated the details of your invoice. Please review the updated
-            information below.
+            We&apos;ve updated the details of your invoice. Please review the
+            updated information below.
           </Text>
 
           <Section style={{ marginBottom: "30px" }}>

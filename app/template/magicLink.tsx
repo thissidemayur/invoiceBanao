@@ -43,7 +43,9 @@ export default function MagicLinkEmail({ url }: { url: string }) {
           >
             Sign In
           </Link>
-          <Text>If you didn't request this, you can ignore this email.</Text>
+          <Text>
+            If you didn&apos;t request this, you can ignore this email.
+          </Text>
         </Container>
       </Body>
     </Html>
